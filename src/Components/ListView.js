@@ -11,10 +11,6 @@ class ListView extends Component {
     this.setState({ query: query.trim() })
   }
 
-  clearQuery = () => {
-    this.setState({ query: '' })
-	}
-
 	render() {
 		const { parks, showMarker } = this.props
 		const { query } = this.state
