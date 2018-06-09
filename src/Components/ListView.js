@@ -7,12 +7,26 @@ class ListView extends Component {
 		query: ''
 	}
 
+	handleParks = showingParks => {
+		const filteredParks = showingParks.map(park => park.name)
+		const markersTitles = this.props.markers.map(marker => marker.title)
+		let intersection = filteredParks.filter(filteredPark => markersTitles.includes(filteredPark))
+		console.log(intersection)
+		this.props.markers.forEach(marker => {
+			if (intersection.includes(marker.title)) {
+				marker.setVisible(true)
+			} else {
+				marker.setVisible(false)
+			}
+		})
+	}
+
 	updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-  }
+		this.setState({ query: query.trim() })
+	}
 
 	render() {
-		const { parks, showMarker } = this.props
+		const { parks, showMarker, handleParks } = this.props
 		const { query } = this.state
 
 		let showingParks
@@ -21,7 +35,7 @@ class ListView extends Component {
       showingParks = parks.filter((park) => match.test(park.name))
     } else {
       showingParks = parks
-    }
+		}
 		return (
 			<div id='list-view'>
 				<h1 id='title'>Berlin's best parks</h1>
@@ -31,7 +45,11 @@ class ListView extends Component {
 					placeholder='filter park...'
 					name='filter'
 					value= { query }
-					onChange={(e) => this.updateQuery(e.target.value)}
+					onChange={ (e) => {
+							this.updateQuery(e.target.value)
+							this.handleParks(showingParks)
+						}
+					}
 					/>
 				<ul className='park-list'>
 					{ showingParks.map( (park, index) => (
