@@ -12,7 +12,7 @@ class App extends Component {
       parks: parks,
       map: '',
       markers: [],
-      currentMarker: '',
+      // currentMarker: '',
       infoWindows: [],
       currentInfoWindow: '',
     }
@@ -24,9 +24,9 @@ class App extends Component {
 
     markers.forEach( marker => {
     	if (e.target.value === marker.title || e.target.title === marker.title) {
-        this.setState({
-          currentMarker: marker
-        })
+        // this.setState({
+        //   currentMarker: marker
+        // })
         // bounce the current marker
         marker.setAnimation(google.maps.Animation.BOUNCE)
         this.showInfoWindow(marker)
@@ -38,8 +38,8 @@ class App extends Component {
     })
   }
 
-  showInfoWindow = (marker) => {
-    const { map } = this.state
+  showInfoWindow = marker => {
+    const { map, infoWindows } = this.state
     const { google } = this.props
     const newInfoWindows = []
 
@@ -54,14 +54,21 @@ class App extends Component {
 
     // open the marker's info window
     infoWindow.open(map, marker)
+
     newInfoWindows.push(infoWindow)
-    this.setState({ currentInfoWindow: infoWindow }, () => console.log(this.state.currentInfoWindow))
+    // this.setState({ currentInfoWindow: infoWindow }, () => console.log(this.state.currentInfoWindow))
     this.setState(prevState => {
       return {
-        infoWindows: prevState.infoWindows.concat(newInfoWindows)
+        infoWindows: prevState.infoWindows.concat(newInfoWindows),
       }
     })
-    this.resetInfoWindow()
+    // reset info window
+    // this.resetInfoWindow()
+    infoWindows.forEach( infoWindow => {
+      if (!!infoWindow) {
+        infoWindow.close()
+      }
+    })
   }
 
   // resetAnimation = () => {
@@ -74,15 +81,15 @@ class App extends Component {
   //   })
   // }
 
-  resetInfoWindow = () => {
-    const { infoWindows, currentInfoWindow } = this.state
-    console.log(infoWindows)
-    infoWindows.forEach( infoWindow => {
-      if (currentInfoWindow !== infoWindow) {
-        infoWindow.close()
-      }
-    })
-  }
+  // resetInfoWindow = () => {
+  //   const { infoWindows, currentInfoWindow } = this.state
+  //   console.log(infoWindows)
+  //   infoWindows.forEach( infoWindow => {
+  //     if (currentInfoWindow !== infoWindow) {
+  //       infoWindow.close()
+  //     }
+  //   })
+  // }
 
   addMarkers = (marker, map) => {
     const { google } = this.props
