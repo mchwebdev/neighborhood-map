@@ -1,7 +1,7 @@
 export const parks = [
 	{
 		name: 'Tiergarten',
-		location: { lat: 52.51449, lng: 13.350091 }
+		location: { lat: 52.51462, lng: 13.357207 }
 	},
 	{
 		name: 'Volkspark Friedrichshain',
@@ -9,7 +9,7 @@ export const parks = [
 	},
 	{
 		name: 'Treptower Park',
-		location: { lat: 52.48846, lng: 13.469744 }
+		location: { lat: 52.4884631, lng: 13.4675558 }
 	},
 	{
 		name: 'Viktoriapark',
@@ -17,7 +17,7 @@ export const parks = [
 	},
 	{
 		name: 'Park am Gleisdreieck',
-		location: { lat: 52.494027, lng: 13.375908 }
+		location: { lat: 52.49456, lng: 13.376661 }
 	},
 	{
 		name: 'Tempelhofer Feld',
@@ -25,7 +25,7 @@ export const parks = [
 	},
 	{
 		name: 'Volkspark Hasenheide',
-		location: { lat: 52.487066, lng: 13.416517 }
+		location: { lat: 52.4848449, lng: 13.416667 }
 	},
 	{
 		name: 'Mauerpark',

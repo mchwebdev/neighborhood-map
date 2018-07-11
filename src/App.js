@@ -12,10 +12,10 @@ class App extends Component {
       parks: parks,
       map: '',
       markers: [],
-      // currentMarker: '',
       infoWindows: [],
       currentInfoWindow: '',
     }
+    this.getFourSquareInfo = this.getFourSquareInfo.bind(this)
   }
 
   showMarker = e => {
@@ -24,9 +24,6 @@ class App extends Component {
 
     markers.forEach( marker => {
     	if (e.target.value === marker.title || e.target.title === marker.title) {
-        // this.setState({
-        //   currentMarker: marker
-        // })
         // bounce the current marker
         marker.setAnimation(google.maps.Animation.BOUNCE)
         this.showInfoWindow(marker)
@@ -44,26 +41,22 @@ class App extends Component {
     const newInfoWindows = []
 
     // create info windows
-    const contentString = `
-    <div className="info-window">
-      <h3>${ marker.title }</h3>
-    </div>`
-    const infoWindow = new google.maps.InfoWindow({
-      content: contentString
-    })
+    const infoWindow = new google.maps.InfoWindow({})
+    this.setState({ currentInfoWindow: infoWindow })
+
+    // set info window infos
+    this.getFourSquareInfo(marker)
 
     // open the marker's info window
     infoWindow.open(map, marker)
 
     newInfoWindows.push(infoWindow)
-    // this.setState({ currentInfoWindow: infoWindow }, () => console.log(this.state.currentInfoWindow))
     this.setState(prevState => {
       return {
         infoWindows: prevState.infoWindows.concat(newInfoWindows),
       }
     })
     // reset info window
-    // this.resetInfoWindow()
     infoWindows.forEach( infoWindow => {
       if (!!infoWindow) {
         infoWindow.close()
@@ -71,25 +64,33 @@ class App extends Component {
     })
   }
 
-  // resetAnimation = () => {
-  //   const { markers } = this.state
-  //   const { google } = this.props
-  //   markers.forEach( marker => {
-  //     if (this.state.currentMarker != marker) {
-  //       marker.setAnimation(null)
-  //     }
-  //   })
-  // }
-
-  // resetInfoWindow = () => {
-  //   const { infoWindows, currentInfoWindow } = this.state
-  //   console.log(infoWindows)
-  //   infoWindows.forEach( infoWindow => {
-  //     if (currentInfoWindow !== infoWindow) {
-  //       infoWindow.close()
-  //     }
-  //   })
-  // }
+  getFourSquareInfo = marker => {
+    const clientId = 'CPE4GJOR3AXFSKMLGC3MRZASDE4LXYIBQCB3HLPDLQNNY3I1'
+    const clientSecret = 'WGEIKBAYIVJBK2CPZMYZ3ZNY5VOS3NYQBUK5HDVBBKR2KC4W'
+    const url = `https://api.foursquare.com/v2/venues/search?client_id=${clientId}&client_secret=${clientSecret}&v=20130815&ll=${marker.getPosition().lat()},${marker.getPosition().lng()}&limit=1`
+    fetch(url)
+      .then(
+        response => {
+          if (response.status !== 200) {
+            this.state.currentInfowindow.setContent("Sorry data could not be loaded")
+            return
+          }
+          response.json()
+            .then(data => {
+              const location = data.response.venues[0]
+              const place = `<h3>${location.name}</h3>`
+              const street = `<p>${location.location.formattedAddress[0]}</p>`
+              const city = `<p>${location.location.formattedAddress[1]}</p>`
+              const link = `<a href="https://foursquare.com/v/${location.id}" target="_blank">More on <b>Foursquare</b></a>`
+              this.state.currentInfoWindow.setContent(place + street + city + link)
+            })
+        }
+      )
+      .catch(error => {
+        console.log(error)
+        this.state.currentInfoWindow.setContent("Sorry data could not be loaded")
+      })
+  }
 
   addMarkers = (marker, map) => {
     const { google } = this.props
