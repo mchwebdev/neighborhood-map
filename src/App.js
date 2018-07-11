@@ -27,7 +27,6 @@ class App extends Component {
         // bounce the current marker
         marker.setAnimation(google.maps.Animation.BOUNCE)
         this.showInfoWindow(marker)
-        // this.resetAnimation()
       } else {
           // stop the bounce animation of unselected markers
           marker.setAnimation(null)
@@ -68,6 +67,7 @@ class App extends Component {
     const clientId = 'CPE4GJOR3AXFSKMLGC3MRZASDE4LXYIBQCB3HLPDLQNNY3I1'
     const clientSecret = 'WGEIKBAYIVJBK2CPZMYZ3ZNY5VOS3NYQBUK5HDVBBKR2KC4W'
     const url = `https://api.foursquare.com/v2/venues/search?client_id=${clientId}&client_secret=${clientSecret}&v=20130815&ll=${marker.getPosition().lat()},${marker.getPosition().lng()}&limit=1`
+    // fetch data from Foursquare and handle errors
     fetch(url)
       .then(
         response => {
